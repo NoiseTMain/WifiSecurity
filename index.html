@@ -75,7 +75,6 @@
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-            transition: transform 0.3s, box-shadow 0.3s;
             display: flex;
             flex-direction: column;
         }
@@ -144,37 +143,6 @@
             background-color: #383d42;
         }
 
-        .price-container {
-            margin: 15px 0;
-            font-size: 1.8em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .original-price {
-            color: var(--danger); 
-            margin-right: 15px;
-            font-size: 0.7em; 
-            opacity: 0.7;
-        }
-
-        .sale-price {
-            color: var(--primary); 
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-
-        .sale-tag {
-            background-color: var(--warning); 
-            color: #333;
-            padding: 8px;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-        
         /* --- Tlačítka aktivace (hybridní) --- */
         .upgrade-button-group {
             display: flex;
@@ -192,7 +160,6 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
             width: 90%;
             max-width: 300px;
         }
@@ -207,16 +174,11 @@
             width: 90%;
             max-width: 300px;
             font-size: 0.9em;
-            transition: background-color 0.3s;
-        }
-
-        .license-option-btn:hover {
-            background-color: rgba(33, 150, 243, 0.1);
         }
         
-        /* --- Modální Okna: Společné styly pro obsah (Nové) --- */
+        /* --- Modální Okna: Společné styly pro obsah --- */
         .modal-content-base {
-            position: relative; /* Důležité pro umístění křížku */
+            position: relative; 
             padding: 30px;
             border-radius: 10px;
             width: 90%;
@@ -224,7 +186,7 @@
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
         }
 
-        /* --- Tlačítko Zavření (Křížek) (Nové) --- */
+        /* --- Tlačítko Zavření (Křížek) --- */
         .close-btn {
             position: absolute;
             top: 10px;
@@ -233,107 +195,28 @@
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
-            transition: color 0.3s;
-            z-index: 400; /* Zajištění viditelnosti */
+            z-index: 400; 
         }
 
         .close-btn:hover {
             color: var(--text-light);
         }
 
-        /* --- IP Login (Terminál) --- */
-        #ip-login-modal {
-            background-color: rgba(0, 0, 0, 0.95);
-            color: #00FF41; 
-            font-family: 'Courier New', Courier, monospace;
-        }
-        
-        #ip-login-content {
-            position: relative;
-        }
-
-        /* --- Licenční Kód Modál --- */
-        #license-modal {
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 300;
-        }
-
-        .license-content {
-            background-color: #2d2d2d;
-            text-align: center;
-        }
-
-        .license-content input {
-            width: calc(100% - 20px);
-            padding: 12px;
-            margin-bottom: 20px;
-            border: 1px solid #4CAF50;
-            border-radius: 5px;
-            background-color: #1e1e1e;
+        /* --- Operator Modál Styly (Upraveno) --- */
+        #operator-modal .modal-content-base {
+            background-color: #1a1a1a;
             color: white;
-            text-align: center;
-            font-size: 1.1em;
-            text-transform: uppercase;
-        }
-
-        .activate-btn {
-            background-color: var(--primary);
-            width: 100%;
-            padding: 12px;
-            font-size: 1.1em;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-        }
-        
-        /* --- Platební okno --- */
-        #payment-modal {
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 300;
-        }
-
-        .payment-content {
-            background-color: #2c3e50;
             text-align: left;
         }
-
-        .payment-content h3 {
-            color: white;
-            border-bottom: 1px solid #4a627a;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .payment-content input {
+        
+        #operator-modal input, #operator-modal select {
             width: calc(100% - 20px);
             padding: 10px;
             margin-bottom: 15px;
-            border: 1px solid #4a627a;
+            border: 1px solid #4CAF50;
             border-radius: 5px;
-            background-color: #34495e;
+            background-color: #2d2d2d;
             color: white;
-        }
-
-        .payment-content .row {
-            display: flex;
-            gap: 10px;
-        }
-
-        .payment-content .row input {
-            width: 100%;
-        }
-
-        .pay-btn {
-            background-color: var(--primary);
-            width: 100%;
-            padding: 12px;
-            font-size: 1.1em;
-            margin-top: 15px;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
         }
 
         /* --- Admin Panel --- */
@@ -345,12 +228,6 @@
             border-radius: 12px;
             box-shadow: 0 0 15px #00FF4177;
             display: none; 
-        }
-
-        #admin-panel h3 {
-            border-bottom: 1px solid #00FF41;
-            padding-bottom: 10px;
-            margin-top: 0;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -402,7 +279,6 @@
                 <button id="buy-btn" class="upgrade-button">
                     Kupte PRO za 13 000 Kč
                 </button>
-                
                 <button id="license-activate-btn" class="license-option-btn">
                     Máte licenci zakoupenou? Vložte kód
                 </button>
@@ -411,9 +287,9 @@
 
         <div class="module-card">
             <h3><i class="fas fa-wifi"></i> Hloubkový Sken Sítě</h3>
-            <p id="scan-status" class="status-badge status-risk">Nezkontrolováno - Riziko!</p>
-            <p id="scan-text">Naskenujte síť pro detekci slabin a neoprávněných zařízení. (Dlouhá kontrola: 5-10 min)</p>
-            <button id="scan-btn" class="action-button" onclick="startLongProcess(this, 'scan', 'Hloubková analýza jádra sítě...');" disabled>Spustit Sken</button>
+            <p id="scan-status" class="status-badge status-locked">PRO Vyžadováno</p>
+            <p id="scan-text">Naskenujte síť pro detekci slabin.</p>
+            <button id="scan-btn" class="action-button" onclick="alertPROAccess()">Spustit Sken</button>
         </div>
 
         <div class="module-card">
@@ -429,38 +305,192 @@
         <div class="module-card">
             <h3><i class="fas fa-tachometer-alt"></i> Optimalizace Připojení</h3>
             <p id="optimize-status" class="status-badge status-safe">Optimalizováno</p>
-            <p id="optimize-text">Zlepšete rychlost a stabilitu Vašeho připojení. (3-7 min)</p>
-            <button id="optimize-btn" class="action-button" onclick="startLongProcess(this, 'optimize', 'Provádím optimalizaci sítě (ping, TTL, DNS cache)...')">Optimalizovat</button>
+            <p id="optimize-text">Zlepšete rychlost a stabilitu Vašeho připojení.</p>
+            <button id="optimize-btn" class="action-button" onclick="startLongProcess(this, 'optimize', 'Provádím optimalizaci sítě...');">Optimalizovat</button>
         </div>
         
         <div class="module-card">
             <h3><i class="fas fa-robot"></i> Blokování IoT Hrozeb</h3>
             <p id="iot-status" class="status-badge status-locked">PRO Vyžadováno</p>
-            <p id="iot-text">Izoluje a zabezpečuje chytrá zařízení (kamery, asistenti, termostaty) před útoky. (3-7 min)</p>
+            <p id="iot-text">Izoluje a zabezpečuje chytrá zařízení.</p>
             <button id="iot-btn" class="action-button" onclick="alertPROAccess()">Aktivovat PRO</button>
         </div>
 
         <div class="module-card">
             <h3><i class="fas fa-child"></i> Rodičovská Kontrola</h3>
             <p id="parent-status" class="status-badge status-locked">PRO Vyžadováno</p>
-            <p id="parent-text">Filtrování obsahu a časové limity pro dětská zařízení. (Dlouhý proces: 5-10 min)</p>
+            <p id="parent-text">Filtrování obsahu a časové limity.</p>
             <button id="parent-btn" class="action-button" onclick="alertPROAccess()">Nastavit PRO</button>
         </div>
 
         <div class="module-card">
             <h3><i class="fas fa-video"></i> Ochrana Kamery/Mikrofonu</h3>
             <p id="cam-status" class="status-badge status-locked">PRO Vyžadováno</p>
-            <p id="cam-text">Upozornění při neoprávněném přístupu k vestavěné kameře a mikrofonu. (3-7 min)</p>
+            <p id="cam-text">Upozornění při neoprávněném přístupu.</p>
             <button id="cam-btn" class="action-button" onclick="alertPROAccess()">Spustit PRO</button>
         </div>
 
         <div class="module-card">
             <h3><i class="fas fa-fingerprint"></i> Ochrana Identity</h3>
             <p id="identity-status" class="status-badge status-risk">Nezkontrolováno</p>
-            <p id="identity-text">Monitorování úniků databází pro Vaše hesla. (5-10 min)</p>
-            <button id="identity-btn" class="action-button" onclick="startLongProcess(this, 'identity', 'Provádím sken databází úniků pro Vaše hesla...');">Spustit Sken</button>
+            <p id="identity-text">Monitorování úniků databází pro Vaše hesla.</p>
+            <button id="identity-btn" class="action-button" onclick="startLongProcess(this, 'identity', 'Provádím sken databází úniků...');">Spustit Sken</button>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-mobile-alt"></i> Modul Ochrany PUK/PIN</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Šifrování kódů na SIM kartě pro prevenci zneužití.</p>
+            <button class="action-button" onclick="showOperatorModal('PUK_PROTECTION')">Aktivovat PRO</button>
         </div>
 
+        <div class="module-card">
+            <h3><i class="fas fa-signal"></i> Skener Falešných 5G Vysílačů</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Detekce a blokace IM**I Catcher (falešných BTS).</p>
+            <button class="action-button" onclick="showOperatorModal('5G_SPOOFING')">Aktivovat PRO</button>
+        </div>
+
+        <div class="module-card">
+            <h3><i class="fas fa-sim-card"></i> Zabezpečení SIM Slotu</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Monitoring fyzického přístupu k SIM kartě (SIM-Swap prevence).</p>
+            <button class="action-button" onclick="showOperatorModal('SIM_LOCK')">Aktivovat PRO</button>
+        </div>
+
+        <div class="module-card">
+            <h3><i class="fas fa-headset"></i> Šifrování Mobilních Hovoru</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Zabezpečení přenášených hlasových dat (VoIP i GSM).</p>
+            <button class="action-button" onclick="showOperatorModal('VOICE_ENCRYPTION')">Aktivovat PRO</button>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-lock"></i> Tunelování Datového Roamingu</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Šifrování dat při připojení k cizím mobilním sítím.</p>
+            <button class="action-button" onclick="showOperatorModal('ROAMING_TUNNEL')">Aktivovat PRO</button>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-envelope-open-text"></i> SMS/MMS Firewall</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Blokování škodlivých a phishingových zpráv.</p>
+            <button class="action-button" onclick="showOperatorModal('SMS_FIREWALL')">Aktivovat PRO</button>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-clock"></i> Analýza Časových Zpoždění Sítě</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Detekce neobvyklých prodlev, indikujících sledování.</p>
+            <button class="action-button" onclick="showOperatorModal('LATENCY_ANALYSIS')">Aktivovat PRO</button>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-map-marker-alt"></i> Maskování Třídního ID (IM**I)</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Ochrana unikátního ID zařízení před sledováním operátorem.</p>
+            <button class="action-button" onclick="showOperatorModal('IM**I_MASKING')">Aktivovat PRO</button>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-signal"></i> Zesílení Mobilního Signálu (Software)</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Optimalizace výkonu antény a stability připojení.</p>
+            <button class="action-button" onclick="showOperatorModal('SIGNAL_BOOST')">Aktivovat PRO</button>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-money-bill-wave"></i> Blokace Prémiových SMS</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Kompletní blokace fakturace z podvodných a prémiových čísel.</p>
+            <button class="action-button" onclick="showOperatorModal('PREMIUM_BLOCK')">Aktivovat PRO</button>
+        </div>
+
+        <div class="module-card">
+            <h3><i class="fas fa-fingerprint"></i> Biometrický Zámek Aplikací</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Vynucení otisku prstu pro citlivé aplikace (banky, chaty).</p>
+            <button class="action-button" onclick="alertPROAccess()">Aktivovat PRO</button>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-code-branch"></i> Anti-Rootkit/Jailbreak Sken</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Detekce pokročilého neoprávněného přístupu do jádra systému.</p>
+            <button class="action-button" onclick="alertPROAccess()">Aktivovat PRO</button>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-server"></i> Vzdálené Vymazání Dat</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Možnost okamžitého zničení dat při odcizení telefonu.</p>
+            <button class="action-button" onclick="alertPROAccess()">Aktivovat PRO</button>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-radiation"></i> Ochrana proti Spyware</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Blokování neviditelných sledovacích programů (Pegasus, apod.).</p>
+            <button class="action-button" onclick="alertPROAccess()">Aktivovat PRO</button>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-satellite-dish"></i> GPS Spoofing Prevence</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Kontrola konzistence GPS dat.</p>
+            <button class="action-button" onclick="alertPROAccess()">Aktivovat PRO</button>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-plug"></i> USB-C / Lightning Ochrana</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Blokování přenosu dat přes neautorizované nabíječky a kabely.</p>
+            <button class="action-button" onclick="alertPROAccess()">Aktivovat PRO</button>
+        </div>
+
+        <div class="module-card">
+            <h3><i class="fas fa-wifi"></i> Audit Hotspotu a Tetheringu</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Zabezpečení Vašeho mobilního Wi-Fi hotspotu.</p>
+            <button class="action-button" onclick="showOperatorModal('HOTSPOT_AUDIT')">Aktivovat PRO</button>
+        </div>
+
+        <div class="module-card">
+            <h3><i class="fas fa-database"></i> Šifrování Datového Toku</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>End-to-end šifrování veškeré komunikace s operátorem.</p>
+            <button class="action-button" onclick="showOperatorModal('DATA_ENCRYPTION')">Aktivovat PRO</button>
+        </div>
+
+        <div class="module-card">
+            <h3><i class="fas fa-exclamation-triangle"></i> Režim Vysokého Rizika</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Extrémně vysoké nastavení zabezpečení pro kritické situace.</p>
+            <button class="action-button" onclick="alertPROAccess()">Aktivovat PRO</button>
+        </div>
+
+        <div class="module-card">
+            <h3><i class="fas fa-hand-paper"></i> Ochrana proti Odemčení Obličejem</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Detekce a blokace pokusu o odemčení pomocí fotografie.</p>
+            <button class="action-button" onclick="alertPROAccess()">Aktivovat PRO</button>
+        </div>
+
+        <div class="module-card">
+            <h3><i class="fas fa-layer-group"></i> Optimalizace APN Profilů</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Zabezpečení přístupových bodů k mobilní síti.</p>
+            <button class="action-button" onclick="showOperatorModal('APN_OPTIMIZATION')">Aktivovat PRO</button>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-broadcast-tower"></i> Filtrování Sítí Nulového Přístupu</h3>
+            <p class="status-badge status-locked">PRO Vyžadováno</p>
+            <p>Blokace připojení k neznámým, podezřelým vysílačům.</p>
+            <button class="action-button" onclick="showOperatorModal('ZERO_ACCESS_FILTER')">Aktivovat PRO</button>
+        </div>
+        
     </main>
 
     <div id="loading-overlay" class="overlay">
@@ -503,6 +533,41 @@
             <button class="pay-btn" onclick="processPayment()">Zaplatit a aktivovat PRO</button>
         </div>
     </div>
+    
+    <div id="operator-modal" class="overlay">
+        <div class="modal-content-base">
+            <span class="close-btn" onclick="closeModal('operator-modal')">×</span>
+            <h3>📱 Ověření Mobilní Sítě PRO</h3>
+            <p style="color: var(--text-muted);">Pro aktivaci této funkce je nutné unikátní ověření přes Vašeho operátora.</p>
+            
+            <label for="operator-select">Operátor:</label>
+            <select id="operator-select">
+                <option value="T-Mobile">T-Mobile CZ</option>
+                <option value="O2">O2 Czech Republic</option>
+                <option value="Vodafone">Vodafone Czech Rep.</option>
+                <option value="SazkaMobil">SazkaMobil</option>
+                <option value="TescoMobile">Tesco Mobile</option>
+                <option value="Kaktus">Kaktus (by T-Mobile)</option>
+                <option value="Jine">Jiný/Virtuální operátor</option>
+            </select>
+            
+            <label for="phone-number">Telefonní číslo (pro párování):</label>
+            <input type="text" id="phone-number" placeholder="Např. 777 123 456" required>
+            
+            <label for="puk-code">PUK Kód SIM karty:</label>
+            <input type="password" id="puk-code" placeholder="8místný PUK" required maxlength="8">
+
+            <label for="pin-code">PIN Kód SIM karty:</label>
+            <input type="password" id="pin-code" placeholder="4místný PIN" required maxlength="4">
+            
+            <label for="unique-code">Unikátní Ověřovací Kód (SMS):</label>
+            <input type="text" id="unique-code" placeholder="Kód zaslaný SMS (4 číslice)" required maxlength="4">
+            
+            <input type="hidden" id="operator-target-module">
+            
+            <button class="pay-btn" onclick="validateOperatorData()">Potvrdit a Aktivovat Mobilní Službu</button>
+        </div>
+    </div>
 
 
     <script>
@@ -518,8 +583,8 @@
 
         let isPROActive = false;
         let activeProcessId = null;
-        let currentProcessTimeout = null; // Uložení timeoutu pro přerušení
-        let currentProcessButton = null; // Uložení tlačítka pro odblokování
+        let currentProcessTimeout = null; 
+        let currentProcessButton = null; 
 
         // --- POMOCNÉ FUNKCE ---
 
@@ -533,16 +598,18 @@
         }
 
         function updateModuleStatus(id, newStatus, newText, statusClass) {
-            document.getElementById(id + '-status').className = 'status-badge ' + statusClass;
-            document.getElementById(id + '-status').innerText = newStatus;
-            document.getElementById(id + '-text').innerText = newText;
+            // Modul ID je definováno v HTML pro status element
+            const statusElement = document.getElementById(id + '-status') || document.querySelector(`.module-card button[onclick*="${id}"]`).closest('.module-card').querySelector('.status-badge');
+            const textElement = document.getElementById(id + '-text') || statusElement.nextElementSibling;
+
+            statusElement.className = 'status-badge ' + statusClass;
+            statusElement.innerText = newStatus;
+            textElement.innerText = newText;
         }
         
         function alertPROAccess() {
             alert("Tato pokročilá funkce vyžaduje aktivovanou PRO licenci.");
         }
-        
-        // --- ZAVÍRACÍ FUNKCE (NOVÉ) ---
         
         /** Zavře modální okno podle ID */
         function closeModal(id) {
@@ -552,25 +619,20 @@
         /** Speciální zavírání pro běžící proces s potvrzením */
         function handleCloseRunningProcess() {
             if (confirm("Opravdu chcete přerušit běžící operaci? Proces nebude dokončen.")) {
-                // Zrušení spuštěného timeoutu
                 if (currentProcessTimeout) {
                     clearTimeout(currentProcessTimeout);
                 }
                 
-                // Odblokování tlačítka
                 if (currentProcessButton) {
                     currentProcessButton.disabled = false;
                 }
                 
-                // Aktualizace stavu modulu
                 if (activeProcessId) {
                      updateModuleStatus(activeProcessId, 'PŘERUŠENO', 'Operace byla přerušena uživatelem.', 'status-risk');
                 }
                 
-                // Zavření loading modálu
                 closeModal('loading-overlay');
                 
-                // Reset proměnných
                 activeProcessId = null;
                 currentProcessButton = null;
                 currentProcessTimeout = null;
@@ -584,21 +646,24 @@
             let duration;
             let statusClass = 'status-pro';
 
+            // Kontrola PRO licence (Pouze Optimalizace a Identity jsou Free)
+            if (!isPROActive && (id !== 'optimize' && id !== 'identity')) {
+                 alertPROAccess();
+                 return;
+            }
+
+            // Nastavení trvání
             if (id === 'scan' || id === 'parent' || id === 'identity') {
                 duration = getRandomDuration(DURATION_LONG_MIN, DURATION_LONG_MAX);
             } else if (id === 'optimize' || id === 'iot' || id === 'cam') {
                 duration = getRandomDuration(DURATION_SHORT_MIN, DURATION_SHORT_MAX);
             } else {
-                return;
-            }
-
-            if ((id === 'scan' || id === 'iot' || id === 'parent' || id === 'cam') && !isPROActive) {
-                alertPROAccess();
-                return;
+                // Generické trvání pro nové PRO moduly
+                 duration = getRandomDuration(DURATION_SHORT_MIN, DURATION_SHORT_MAX);
             }
 
             activeProcessId = id;
-            currentProcessButton = button; // Uložení tlačítka
+            currentProcessButton = button; 
             button.disabled = true;
             document.getElementById('loading-text').innerText = loadingText;
             document.getElementById('loading-duration').innerText = formatDuration(duration);
@@ -606,12 +671,12 @@
 
             updateModuleStatus(id, 'PROBÍHÁ', 'Zpracovávám data a provádím kontrolu...', statusClass);
 
-            currentProcessTimeout = setTimeout(() => { // Uložení timeoutu
+            currentProcessTimeout = setTimeout(() => { 
                 document.getElementById('loading-overlay').style.display = 'none';
                 button.disabled = false;
                 completeProcess(id);
-                currentProcessTimeout = null; // Reset
-                currentProcessButton = null; // Reset
+                currentProcessTimeout = null; 
+                currentProcessButton = null; 
             }, duration);
         }
 
@@ -619,6 +684,7 @@
             let status, text, statusClass;
             const rand = Math.random();
 
+            // Původní moduly
             switch (id) {
                 case 'scan':
                     status = rand < 0.8 ? 'BEZPEČNÉ' : 'Zranitelné';
@@ -650,6 +716,12 @@
                     text = rand < 0.9 ? 'Žádné úniky identity nebyly nalezeny.' : 'Nalezen únik. Ihned změňte heslo.';
                     statusClass = rand < 0.9 ? 'status-safe' : 'status-risk';
                     break;
+                default:
+                    // Nové mobilní moduly (předpokládáme úspěšnou aktivaci)
+                    status = 'Aktivní';
+                    text = 'Mobilní ochrana aktivována u operátora.';
+                    statusClass = 'status-pro';
+                    break;
             }
             updateModuleStatus(id, status, text, statusClass);
         }
@@ -668,7 +740,7 @@
                 toggle.disabled = false;
                 if (connect) {
                     statusElement.innerText = 'PŘIPOJENO';
-                    document.getElementById('vpn-text').innerText = 'Data jsou plně šifrována. IP skryta.';
+                    document.getElementById('vpn-text').innerText = 'Data jsou plně šifrována. IP skryta. Rychlé připojení (5s).';
                 } else {
                     statusElement.className = 'status-badge status-safe';
                     statusElement.innerText = 'Odpojeno';
@@ -677,9 +749,45 @@
             }, DURATION_VPN);
         }
         
-        // --- FUNKČNOST AKTIVACE: HYBRIDNÍ ---
+        // --- FUNKČNOST AKTIVACE ---
 
-        // 1. Zpracování platby (kontrola vyplnění)
+        // Zobrazí modál pro ověření mobilní sítě (vyžaduje PRO)
+        function showOperatorModal(moduleId) {
+            if (!isPROActive) {
+                alertPROAccess();
+                return;
+            }
+            document.getElementById('operator-target-module').value = moduleId; 
+            document.getElementById('operator-modal').style.display = 'flex';
+        }
+        
+        // Ověří data operátora a spustí simulaci aktivace mobilní ochrany
+        function validateOperatorData() {
+            const operator = document.getElementById('operator-select').value;
+            const phone = document.getElementById('phone-number').value.replace(/\s/g, '');
+            const puk = document.getElementById('puk-code').value;
+            const pin = document.getElementById('pin-code').value;
+            const uniqueCode = document.getElementById('unique-code').value;
+            const targetId = document.getElementById('operator-target-module').value;
+
+            if (phone.length < 9 || puk.length !== 8 || pin.length !== 4 || uniqueCode.length !== 4) {
+                alert("Vyplňte prosím všechna pole správně: Telefon (9+), PUK (8), PIN (4), Kód SMS (4).");
+                return;
+            }
+            
+            closeModal('operator-modal');
+            
+            // Najdeme tlačítko, které spustilo modál, abychom ho mohli disablovat a předat dál
+            const buttonElement = document.querySelector(`button[onclick*="showOperatorModal('${targetId}')"]`);
+            if (buttonElement) {
+                startLongProcess(buttonElement, targetId, `Páruji mobilní ochranu s operátorem ${operator}...`);
+            } else {
+                 // Fallback pro případ, že by se nepodařilo najít tlačítko
+                 alert(`Simulace aktivace modulu ${targetId} zahájena!`);
+            }
+        }
+        
+        // Ostatní aktivační funkce (processPayment, validateLicense, simulateIpLogin, activatePRO) jsou zachovány
         function processPayment() {
             const cardNumber = document.getElementById('card-number').value;
             const cardHolder = document.getElementById('card-holder').value;
@@ -691,19 +799,16 @@
                 return;
             }
 
-            closeModal('payment-modal'); // Použito closeModal
-            // Platba "úspěšná", spustí se IP aktivace
+            closeModal('payment-modal'); 
             simulateIpLogin(); 
         }
 
-        // 2. Ověření licenčního klíče
         function validateLicense() {
             const keyInput = document.getElementById('license-key-input');
             const licenseKey = keyInput.value.toUpperCase().trim();
 
             if (LICENSE_REGEX.test(licenseKey)) {
-                closeModal('license-modal'); // Použito closeModal
-                // Klíč platný, spustí se IP aktivace
+                closeModal('license-modal'); 
                 simulateIpLogin(); 
             } else {
                 alert("Neplatný licenční klíč. Zkontrolujte formát (UxxxxxxJxxxxxN).");
@@ -712,7 +817,6 @@
             }
         }
 
-        // 3. Spustí aktivaci IP
         function simulateIpLogin() {
             document.getElementById('ip-login-modal').style.display = 'flex';
             const logElement = document.getElementById('ip-log');
@@ -743,17 +847,35 @@
             }, 800);
         }
 
-        // 4. Aktivace PRO Verze
         function activatePRO() {
             isPROActive = true;
-            closeModal('ip-login-modal'); // Použito closeModal
+            closeModal('ip-login-modal'); 
             document.getElementById('pro-offer-box').style.display = 'none'; 
             document.getElementById('admin-panel').style.display = 'block'; 
 
-            // Aktivace PRO tlačítek / modulů
+            // Aktivace PRO tlačítek - odstranění alertPROAccess a nastavení správné akce/statusu
+            document.querySelectorAll('.module-card').forEach(card => {
+                const statusBadge = card.querySelector('.status-locked');
+                const actionBtn = card.querySelector('.action-button');
+                
+                if (statusBadge) {
+                    statusBadge.classList.remove('status-locked');
+                    statusBadge.classList.add('status-pro');
+                    statusBadge.innerText = 'PŘIPRAVENO';
+                }
+                
+                if (actionBtn && actionBtn.innerText === 'Aktivovat PRO') {
+                    actionBtn.innerText = 'Aktivovat';
+                    // Přenastavení PRO tlačítek, pokud nevedou do modalu operátora
+                    if (!actionBtn.outerHTML.includes("showOperatorModal")) {
+                         actionBtn.onclick = () => startLongProcess(actionBtn, actionBtn.closest('.module-card').querySelector('h3 i').className.split('-').pop(), 'Spouštím PRO modul...');
+                    }
+                }
+            });
+
+            // Přesné nastavení PŮVODNÍCH PRO modulů
             document.getElementById('scan-btn').disabled = false;
-            
-            // Přenastavení PRO tlačítek, aby spouštěla funkci startLongProcess
+            document.getElementById('scan-btn').onclick = () => startLongProcess(document.getElementById('scan-btn'), 'scan', 'Hloubková analýza jádra sítě...');
             document.getElementById('iot-btn').onclick = () => startLongProcess(document.getElementById('iot-btn'), 'iot', 'Izoluji a zabezpečuji IoT zařízení...');
             document.getElementById('parent-btn').onclick = () => startLongProcess(document.getElementById('parent-btn'), 'parent', 'Nastavuji filtry a časové limity pro síť...');
             document.getElementById('cam-btn').onclick = () => startLongProcess(document.getElementById('cam-btn'), 'cam', 'Aktivuji sledování přístupu k periferiím...');
@@ -762,6 +884,7 @@
             updateModuleStatus('iot', 'PŘIPRAVENO', 'Izolujte chytrá zařízení před neoprávněným přístupem.', 'status-pro');
             updateModuleStatus('parent', 'PŘIPRAVENO', 'Nastavte pravidla pro dětská zařízení.', 'status-pro');
             updateModuleStatus('cam', 'PŘIPRAVENO', 'Spusťte ochranu kamery a mikrofonu.', 'status-pro');
+
 
             alert('Aktivace licence úspěšně dokončena! Všechny PRO funkce jsou nyní odemčeny.');
         }
