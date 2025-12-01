@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi Security PRO - Simulace</title>
+    <style>
+        /* --- Obecné styly --- */
+        :root {
+            --primary: #4CAF50; /* Zelená pro aktivní/PRO */
+            --secondary: #2196F3; /* Modrá */
+            --background: #1e1e1e; /* Tmavé pozadí */
+            --card-bg: #2d2d2d;
+            --text-light: #f0f0f0;
+            --text-muted: #888;
+            --danger: #F44336;
+            --warning: #FF9800;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- Navigace (Header) --- */
+        .header {
+            width: 100%;
+            background-color: #252525;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .nav-buttons button {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            padding: 8px 15px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-buttons button:hover {
+            background-color: #3a3a3a;
+        }
+
+        .nav-buttons button.primary-btn {
+            background-color: var(--secondary);
+            font-weight: bold;
+        }
+
+        .nav-buttons button.primary-btn:hover {
+            background-color: #1976D2;
+        }
+
+        /* --- Hlavní obsah --- */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            padding: 20px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* --- Karta Modulu --- */
+        .module-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .module-card h3 {
+            margin-top: 0;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .module-card h3 i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .status-safe {
+            background-color: var(--primary);
+            color: var(--background);
+        }
+
+        .status-risk {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .status-pro {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        /* --- Toggle/Button Styly --- */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-top: 10px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .action-button {
+            padding: 10px 20px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+            margin-top: 15px;
+        }
+
+        .action-button:hover:not(:disabled) {
+            background-color: #1976D2;
+        }
+
+        .action-button:disabled {
+            background-color: #5a5a5a;
+            cursor: not-allowed;
+        }
+
+        /* --- Loading/Progress Styly --- */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 8px solid #3a3a3a;
+            border-top: 8px solid var(--primary);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.5em;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        /* --- PRO Upgrade / Cena Styly (NOVINKA) --- */
+        .pro-upgrade-box {
+            grid-column: 1 / -1; /* Zabere celou šířku */
+            text-align: center;
+            padding: 30px;
+            border: 2px solid var(--primary);
+            background-color: #383d42;
+        }
+
+        .price-container {
+            margin: 15px 0;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .original-price {
+            color: var(--danger); /* Červená barva pro škrtnutou cenu */
+            margin-right: 15px;
+            font-size: 0.7em; /* Menší než nová cena */
+            opacity: 0.7;
+        }
+
+        .sale-price {
+            color: var(--primary); /* Zelená barva pro novou cenu */
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .sale-tag {
+            background-color: var(--warning); /* Oranžová/žlutá pro upozornění */
+            color: #333;
+            padding: 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 152, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+        }
+
+        .upgrade-button {
+            padding: 12px 30px;
+            font-size: 1.1em;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .upgrade-button:hover {
+            background-color: #43A047;
+        }
+
+        /* --- IP Login (NOVINKA) --- */
+        #ip-login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 300;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #00FF41; /* Neo Green */
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #ip-login-content h2 {
+            color: #00FF41;
+            margin-bottom: 20px;
+        }
+
+        .ip-line {
+            white-space: pre;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .ip-blink {
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* --- Admin Panel (NOVINKA) --- */
+        #admin-panel {
+            grid-column: 1 / -1;
+            background-color: #0d0d0d;
+            color: #00FF41;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px #00FF4177;
+            display: none; /* Skryté, dokud není aktivováno PRO */
+        }
+
+        #admin-panel h3 {
+            border-bottom: 1px solid #00FF41;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .config-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed #333;
+        }
+
+        .config-item:last-child {
+            border-bottom: none;
+        }
+
+        .config-label {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i> WiFi Security PRO
+        </div>
+        <div class="nav-buttons">
+            <button id="login-btn">Přihlásit se</button>
+            <button id="register-btn" class="primary-btn">Vytvořit účet</button>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <div id="admin-panel">
+            <h3>🌐 Admin Konfigurační Panel (PRO Verze)</h3>
+            <p>Technický náhled: Nastavení jádra pro maximální ochranu. **Na oko naprogramované** funkce.</p>
+
+            <div class="config-item">
+                <span class="config-label">STATUS_VPN_CHANNEL:</span>
+                <span style="color: #00FF41;">SECURE_TUNNEL_0x78BA</span>
+            </div>
+            <div class="config-item">
+                <span class="config-label">WHITELIST_MAC_FILTER:</span>
+                <button class="action-button" style="background-color: #333; color: white;">Přidat MAC</button>
+            </div>
+            <div class="config-item">
+                <span class="config-label">INTRUSION_DETECTION_LEVEL:</span>
+                <span style="color: var(--warning);">HIGH_SENSITIVITY (L7)</span>
+            </div>
+            <div class="config-item">
+                <span class="config-label">ENCRYPTION_PROTOCOL:</span>
+                <select style="padding: 5px; background: #333; color: white; border: 1px solid #00FF41;">
+                    <option>AES-256-GCM</option>
+                    <option>ChaCha20-Poly1305</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="pro-offer-box" class="module-card pro-upgrade-box">
+            <h3>🔥 EXKLUZIVNÍ NABÍDKA PRO MAXIMÁLNÍ BEZPEČÍ</h3>
+            <p class="description">Získejte celoroční licenci **WiFi Security PRO** s největší slevou roku:</p>
+            
+            <div class="price-container">
+                <span class="original-price">
+                    <del>16 000 Kč</del>
+                </span>
+                <span class="sale-price">
+                    13 000 Kč
+                </span>
+            </div>
+            
+            <div class="sale-tag">
+                ⭐ VÁNOČNÍ SLEVOVÝ TÝDEN! Ušetříte 3000 Kč
+            </div>
+            
+            <button id="upgrade-btn" class="upgrade-button">
+                Kupte PRO a aktivujte IP přihlášení
+            </button>
+        </div>
+
+        <div class="module-card">
+            <h3><i class="fas fa-wifi"></i> WiFi Sken</h3>
+            <p id="scan-status" class="status-badge status-risk">Nezkontrolováno - Riziko!</p>
+            <p id="scan-text">Naskenujte síť pro detekci slabin a neoprávněných zařízení.</p>
+            <button id="scan-btn" class="action-button" onclick="startScanSimulation(this)">Spustit hloubkový sken</button>
+        </div>
+
+        <div class="module-card">
+            <h3><i class="fas fa-globe"></i> VPN Připojení</h3>
+            <span id="vpn-status" class="status-badge status-safe">Odpojeno</span>
+            <p id="vpn-text">Šifrujte data a skryjte svou IP adresu. Rychlé připojení (5s).</p>
+            <label class="toggle-switch">
+                <input type="checkbox" id="vpn-toggle" onchange="handleVpnToggle(this.checked)">
+                <span class="slider"></span>
+            </label>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-tachometer-alt"></i> Optimalizace sítě</h3>
+            <p id="optimize-status" class="status-badge status-safe">Optimalizováno</p>
+            <p id="optimize-text">Zlepšete rychlost a stabilitu Vašeho připojení.</p>
+            <button id="optimize-btn" class="action-button" onclick="handleOptimization(this)">Optimalizovat nyní</button>
+        </div>
+        
+        <div class="module-card">
+            <h3><i class="fas fa-fingerprint"></i> Ochrana Identity</h3>
+            <p id="identity-status" class="status-badge status-risk">VYŽADUJE PRO</p>
+            <p id="identity-text">Monitorování úniků a ochrana hesel. (Dlouhá simulace: 5-10 min)</p>
+            <button id="identity-btn" class="action-button" disabled>Aktivovat PRO</button>
+        </div>
+
+    </main>
+
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p id="loading-text" class="loading-text">Probíhá simulace...</p>
+        <p id="loading-duration" style="font-size: 0.8em; color: var(--text-muted);"></p>
+    </div>
+
+    <div id="ip-login-modal">
+        <div id="ip-login-content">
+            <h2>🔒 Přihlášení přes IP protokol...</h2>
+            <div id="ip-log">
+                <div class="ip-line">-- Iniciace PRO verze licenčním tokenem --</div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- KONSTANTY PRO SIMULACI ČASU ---
+        // Dlouhé simulace: 5 až 10 minut
+        const DURATION_LONG_MIN = 300000; // 5 minut v ms
+        const DURATION_LONG_MAX = 600000; // 10 minut v ms
+        
+        // Krátké simulace (kromě VPN): 3 až 7 minut
+        const DURATION_SHORT_MIN = 180000; // 3 minuty v ms
+        const DURATION_SHORT_MAX = 420000; // 7 minut v ms
+        
+        // Pevná doba pro VPN: 5 sekund
+        const DURATION_VPN = 5000; // 5 sekund v ms
+
+        let isPROActive = false;
+
+        // --- POMOCNÉ FUNKCE ---
+
+        /** Vrátí náhodnou dobu v ms v daném rozsahu */
+        function getRandomDuration(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        /** Formátuje dobu z ms na minuty pro zobrazení */
+        function formatDuration(ms) {
+            const minutes = Math.ceil(ms / 60000);
+            return `Simulace trvá cca ${minutes} minut.`;
+        }
+
+        /** Aktualizuje stav a text modulu */
+        function updateModuleStatus(id, newStatus, newText, statusClass) {
+            document.getElementById(id + '-status').className = 'status-badge ' + statusClass;
+            document.getElementById(id + '-status').innerText = newStatus;
+            document.getElementById(id + '-text').innerText = newText;
+        }
+
+        // --- HLAVNÍ FUNKČNOST ---
+
+        // 1. WiFi Sken
+        function startScanSimulation(button) {
+            if (!isPROActive) {
+                 alert("Hloubkový sken je dostupný pouze v PRO verzi. Aktivujte ji nákupem!");
+                 return;
+            }
+
+            const duration = getRandomDuration(DURATION_LONG_MIN, DURATION_LONG_MAX);
+            
+            button.disabled = true;
+            document.getElementById('loading-text').innerText = "Probíhá hloubková analýza jádra...";
+            document.getElementById('loading-duration').innerText = formatDuration(duration);
+            document.getElementById('loading-overlay').style.display = 'flex';
+
+            updateModuleStatus('scan', 'Probíhá', 'Kontrolují se všechny porty a zařízení...', 'status-pro');
+
+            setTimeout(() => {
+                document.getElementById('loading-overlay').style.display = 'none';
+                button.disabled = false;
+                
+                // Náhodný výsledek simulace (pro "reálnost")
+                if (Math.random() < 0.7) { 
+                    updateModuleStatus('scan', 'BEZPEČNÉ', 'Síť je čistá. Zkontrolováno přes 4000 hrozeb.', 'status-pro');
+                } else {
+                    updateModuleStatus('scan', 'Zranitelné', 'Nalezena malá slabina v portu 8080.', 'status-risk');
+                }
+            }, duration);
+        }
+
+        // 2. VPN
+        function handleVpnToggle(isChecked) {
+            if (isChecked) {
+                simulateVpnConnection(true);
+            } else {
+                simulateVpnConnection(false);
+            }
+        }
+        
+        function simulateVpnConnection(connect) {
+            const statusElement = document.getElementById('vpn-status');
+            const toggle = document.getElementById('vpn-toggle');
+            
+            toggle.disabled = true;
+            statusElement.className = 'status-badge status-pro';
+            statusElement.innerText = connect ? 'PŘIPOJOVÁNÍ...' : 'ODPOJOVÁNÍ...';
+            document.getElementById('vpn-text').innerText = connect ? 'Navazuji bezpečný šifrovaný tunel...' : 'Ukončuji spojení...';
+
+            // Pevná doba 5 sekund
+            setTimeout(() => {
+                toggle.disabled = false;
+                if (connect) {
+                    statusElement.innerText = 'PŘIPOJENO';
+                    document.getElementById('vpn-text').innerText = 'Data jsou plně šifrována. IP skryta.';
+                } else {
+                    statusElement.className = 'status-badge status-safe';
+                    statusElement.innerText = 'Odpojeno';
+                    document.getElementById('vpn-text').innerText = 'Šifrujte data a skryjte svou IP adresu. Rychlé připojení (5s).';
+                }
+            }, DURATION_VPN);
+        }
+
+        // 3. Optimalizace
+        function handleOptimization(button) {
+            const duration = getRandomDuration(DURATION_SHORT_MIN, DURATION_SHORT_MAX);
+            
+            button.disabled = true;
+            document.getElementById('loading-text').innerText = "Provádím optimalizaci sítě (ping, TTL, DNS cache)...";
+            document.getElementById('loading-duration').innerText = formatDuration(duration);
+            document.getElementById('loading-overlay').style.display = 'flex';
+
+            updateModuleStatus('optimize', 'Probíhá', 'Analyzuji cestu k serverům...', 'status-pro');
+
+            setTimeout(() => {
+                document.getElementById('loading-overlay').style.display = 'none';
+                button.disabled = false;
+                updateModuleStatus('optimize', 'Optimalizováno', 'Optimalizace dokončena. Latence snížena o 10%.', 'status-pro');
+            }, duration);
+        }
+        
+        // --- NOVÁ FUNKČNOST: PRO AKTIVACE A IP PŘIHLÁŠENÍ ---
+
+        // 4. IP Přihlášení Simulace
+        function simulateIpLogin() {
+            document.getElementById('ip-login-modal').style.display = 'flex';
+            const logElement = document.getElementById('ip-log');
+            logElement.innerHTML = '<div class="ip-line">-- Iniciace PRO verze licenčním tokenem --</div>';
+            
+            const steps = [
+                'RESOLVING: Licenční server 185.22.11.45...',
+                'CONNECT: TCP/443 (SECURE)...',
+                'AUTH: Sending license key via secure channel...',
+                'VERIFY: Checking hardware hash (MAC, CPU_ID)...',
+                'LICENSE_STATUS: ACTIVATED (Valid until 2026-12-25)...',
+                'IP_LOCK: Binding license to current public IP (77.240.xxx.xxx)...',
+                'CORE_MODULES: Loading PRO components...',
+                '<div class="ip-line ip-blink" style="color: #FF9800;">[STATUS]: PRO VERZE AKTIVOVÁNA!</div>'
+            ];
+            
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < steps.length) {
+                    const newLine = document.createElement('div');
+                    newLine.className = 'ip-line';
+                    newLine.innerHTML = steps[i];
+                    logElement.appendChild(newLine);
+                    logElement.scrollTop = logElement.scrollHeight; // Scroll dolů
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    // Po 3 sekundách od poslední zprávy zavřít modal a aktivovat PRO
+                    setTimeout(activatePRO, 3000);
+                }
+            }, 1000);
+        }
+
+        // 5. Aktivace PRO Verze
+        function activatePRO() {
+            isPROActive = true;
+            document.getElementById('ip-login-modal').style.display = 'none';
+            document.getElementById('pro-offer-box').style.display = 'none'; // Skrýt nabídku
+            document.getElementById('admin-panel').style.display = 'block'; // Zobrazit admin panel
+
+            // Aktualizovat všechny PRO moduly
+            document.getElementById('identity-btn').disabled = false;
+            document.getElementById('identity-btn').innerText = 'Spustit PRO sken';
+            updateModuleStatus('identity', 'PRO AKTIVNÍ', 'Monitorování úniků je zapnuto. (Dlouhá simulace: 5-10 min)', 'status-pro');
+            
+            // Po aktivaci PRO se Sken stane PRO
+            updateModuleStatus('scan', 'PŘIPRAVENO', 'Síť připravena k hloubkové analýze.', 'status-safe');
+
+            alert('Gratulujeme! PRO verze úspěšně aktivována pomocí IP. Vítejte v Admin Panelu!');
+        }
+        
+        // 6. Identity Protection (Aktivace po PRO)
+        function handleIdentityProtection(button) {
+            if (!isPROActive) return;
+
+            const duration = getRandomDuration(DURATION_LONG_MIN, DURATION_LONG_MAX);
+            
+            button.disabled = true;
+            document.getElementById('loading-text').innerText = "Provádím sken databází úniků pro Vaše hesla...";
+            document.getElementById('loading-duration').innerText = formatDuration(duration);
+            document.getElementById('loading-overlay').style.display = 'flex';
+
+            updateModuleStatus('identity', 'Probíhá', 'Kontroluji miliony záznamů...', 'status-pro');
+
+            setTimeout(() => {
+                document.getElementById('loading-overlay').style.display = 'none';
+                button.disabled = false;
+                
+                if (Math.random() < 0.9) { 
+                    updateModuleStatus('identity', 'BEZPEČNÉ', 'Žádné úniky identity nebyly nalezeny.', 'status-pro');
+                } else {
+                    updateModuleStatus('identity', 'POZOR!', 'Nalezen jeden únik. Doporučujeme ihned změnit heslo.', 'status-risk');
+                }
+            }, duration);
+        }
+
+        // --- INICIALIZACE ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // A. Nastavení posluchačů pro mrtvá tlačítka
+            document.getElementById('login-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                alert("Simulace: Tlačítka pro účet jsou v této demo verzi neaktivní.");
+            });
+            document.getElementById('register-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                alert("Simulace: Tlačítka pro účet jsou v této demo verzi neaktivní.");
+            });
+            
+            // B. Posluchač pro PRO upgrade -> spuštění IP přihlášení
+            document.getElementById('upgrade-btn').addEventListener('click', simulateIpLogin);
+            
+            // C. Posluchač pro modul Identity (po PRO aktivaci)
+            document.getElementById('identity-btn').addEventListener('click', () => {
+                handleIdentityProtection(document.getElementById('identity-btn'));
+            });
+        });
+        
+    </script>
+</body>
+</html>
