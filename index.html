@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WiFi Security PRO</title>
     <style>
-        /* --- Obecné styly --- */
+        /* --- Obecné styly (Návrat k čistějšímu designu) --- */
         :root {
             --primary: #4CAF50; /* Zelená pro aktivní/PRO */
             --secondary: #2196F3; /* Modrá */
-            --background: #1e1e1e; /* Tmavé pozadí */
-            --card-bg: #2d2d2d;
-            --text-light: #f0f0f0;
-            --text-muted: #888;
+            --background: #f4f4f4; /* Světlé pozadí */
+            --card-bg: #ffffff;
+            --text-dark: #333;
+            --text-muted: #666;
             --danger: #F44336;
             --warning: #FF9800;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             background-color: var(--background);
-            color: var(--text-light);
+            color: var(--text-dark);
             margin: 0;
             padding: 0;
             display: flex;
@@ -31,12 +31,12 @@
         /* --- Navigace (Header) --- */
         .header {
             width: 100%;
-            background-color: #252525;
+            background-color: var(--card-bg);
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -50,8 +50,8 @@
 
         .nav-buttons button {
             background: none;
-            border: none;
-            color: var(--text-light);
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
             padding: 8px 15px;
             margin-left: 10px;
             cursor: pointer;
@@ -59,6 +59,11 @@
             transition: background-color 0.3s;
         }
 
+        .nav-buttons button:hover {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
         /* --- Hlavní obsah --- */
         .container {
             width: 90%;
@@ -72,38 +77,41 @@
         /* --- Karta Modulu --- */
         .module-card {
             background-color: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--secondary); /* Vizuální prvek */
             display: flex;
             flex-direction: column;
         }
 
         .module-card h3 {
             margin-top: 0;
-            color: var(--primary);
+            color: var(--text-dark);
             display: flex;
             align-items: center;
+            font-size: 1.2em;
         }
 
         .status-badge {
             display: inline-block;
             padding: 5px 10px;
             border-radius: 20px;
-            font-size: 0.9em;
+            font-size: 0.8em;
             font-weight: bold;
             margin-bottom: 15px;
+            color: white;
         }
 
-        .status-safe { background-color: var(--primary); color: var(--background); }
-        .status-risk { background-color: var(--danger); color: white; }
-        .status-pro { background-color: var(--secondary); color: white; }
-        .status-locked { background-color: #555; color: #bbb; }
+        .status-safe { background-color: var(--primary); }
+        .status-risk { background-color: var(--danger); }
+        .status-pro { background-color: var(--secondary); }
+        .status-locked { background-color: #aaa; color: #333; }
 
 
         .action-button {
             padding: 10px 20px;
-            background-color: var(--secondary);
+            background-color: var(--primary);
             color: white;
             border: none;
             border-radius: 6px;
@@ -113,8 +121,12 @@
             margin-top: 15px;
         }
 
+        .action-button:hover:not(:disabled) {
+            background-color: #388e3c;
+        }
+
         .action-button:disabled {
-            background-color: #5a5a5a;
+            background-color: #bbb;
             cursor: not-allowed;
         }
 
@@ -125,7 +137,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.7);
             z-index: 200;
             display: none;
             flex-direction: column;
@@ -134,59 +146,40 @@
             text-align: center;
         }
         
-        /* --- PRO Upgrade / Cena Styly --- */
-        .pro-upgrade-box {
-            grid-column: 1 / -1; 
-            text-align: center;
-            padding: 30px;
-            border: 2px solid var(--primary);
-            background-color: #383d42;
-        }
-
-        /* --- Tlačítka aktivace (hybridní) --- */
-        .upgrade-button-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .upgrade-button {
-            padding: 12px 30px;
-            font-size: 1.1em;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 90%;
-            max-width: 300px;
-        }
-
-        .license-option-btn {
-            background: none;
-            border: 1px solid var(--secondary);
-            color: var(--secondary);
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 90%;
-            max-width: 300px;
-            font-size: 0.9em;
-        }
-        
-        /* --- Modální Okna: Společné styly pro obsah --- */
+        /* Modální obsah */
         .modal-content-base {
             position: relative; 
+            background-color: white;
+            color: var(--text-dark);
             padding: 30px;
             border-radius: 10px;
             width: 90%;
             max-width: 450px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Inputy v modálech */
+        .modal-content-base input, .modal-content-base select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            color: var(--text-dark);
         }
 
-        /* --- Tlačítko Zavření (Křížek) --- */
+        .modal-content-base button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        /* --- Tlačítko Zavření (Křížek) - ZACHOVÁNO --- */
         .close-btn {
             position: absolute;
             top: 10px;
@@ -199,35 +192,51 @@
         }
 
         .close-btn:hover {
-            color: var(--text-light);
+            color: var(--danger);
         }
 
-        /* --- Operator Modál Styly (Upraveno) --- */
-        #operator-modal .modal-content-base {
-            background-color: #1a1a1a;
-            color: white;
-            text-align: left;
+        /* --- PRO Upgrade / Cena Styly --- */
+        .pro-upgrade-box {
+            grid-column: 1 / -1; 
+            text-align: center;
+            padding: 30px;
+            border: 2px solid var(--primary);
+            background-color: #e0ffe0;
+            color: var(--text-dark);
+        }
+
+        .pro-upgrade-box h3 {
+            color: var(--danger);
         }
         
-        #operator-modal input, #operator-modal select {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #4CAF50;
-            border-radius: 5px;
-            background-color: #2d2d2d;
-            color: white;
+        .sale-price {
+            font-size: 2em;
+            color: var(--danger);
+            font-weight: bold;
+            margin: 10px 0;
+            display: block;
         }
 
+        .original-price {
+            color: var(--text-muted);
+            margin-right: 15px;
+        }
+        
         /* --- Admin Panel --- */
         #admin-panel {
             grid-column: 1 / -1;
-            background-color: #0d0d0d;
+            background-color: #333;
             color: #00FF41;
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 0 15px #00FF4177;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             display: none; 
+        }
+
+        #admin-panel select {
+             background: #444; 
+             color: white; 
+             border: 1px solid #00FF41;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -247,11 +256,11 @@
     <main class="container">
 
         <div id="admin-panel">
-            <h3>🌐 Admin Konfigurační Panel</h3>
+            <h3>🌐 Admin Konfigurační Panel (PRO AKTIVNÍ)</h3>
             <p>Technický náhled: Nastavení jádra PRO verze pro maximální ochranu.</p>
             <div class="config-item">
                 <span class="config-label">ENCRYPTION_PROTOCOL:</span>
-                <select style="padding: 5px; background: #333; color: white; border: 1px solid #00FF41;">
+                <select style="padding: 5px; ">
                     <option>AES-256-GCM</option>
                     <option>ChaCha20-Poly1305</option>
                 </select>
@@ -271,12 +280,12 @@
                 </span>
             </div>
             
-            <div class="sale-tag">
+            <div class="sale-tag" style="color: var(--danger); font-weight: bold; margin-bottom: 15px;">
                 ⭐ VÁNOČNÍ SLEVOVÝ TÝDEN! Ušetříte 3000 Kč
             </div>
             
             <div class="upgrade-button-group">
-                <button id="buy-btn" class="upgrade-button">
+                <button id="buy-btn" class="upgrade-button" style="background-color: var(--danger);">
                     Kupte PRO za 13 000 Kč
                 </button>
                 <button id="license-activate-btn" class="license-option-btn">
@@ -496,15 +505,15 @@
     <div id="loading-overlay" class="overlay">
         <span class="close-btn" onclick="handleCloseRunningProcess()">×</span> 
         <div class="spinner"></div>
-        <p id="loading-text" class="loading-text">Probíhá proces...</p>
-        <p id="loading-duration" style="font-size: 0.8em; color: var(--text-muted);"></p>
+        <p id="loading-text" class="loading-text" style="color: white;">Probíhá proces...</p>
+        <p id="loading-duration" style="font-size: 0.8em; color: #ccc;"></p>
     </div>
 
     <div id="ip-login-modal" class="overlay">
-        <div id="ip-login-content">
-            <span class="close-btn" onclick="closeModal('ip-login-modal')">×</span>
+        <div id="ip-login-content" class="modal-content-base" style="max-width: 600px; background-color: #1a1a1a; color: #00FF41; text-align: left;">
+            <span class="close-btn" onclick="closeModal('ip-login-modal')" style="color: #aaa;">×</span>
             <h2>🔒 Aktivace licence PRO...</h2>
-            <div id="ip-log">
+            <div id="ip-log" style="font-family: 'Courier New', monospace; font-size: 0.9em; height: 150px; overflow-y: auto;">
                 <div class="ip-line">-- Inicializace licenčního protokolu --</div>
             </div>
         </div>
@@ -526,11 +535,11 @@
             <h3>💳 Dokončení nákupu: 13 000 Kč</h3>
             <input type="text" id="card-number" placeholder="Číslo karty" required maxlength="16">
             <input type="text" id="card-holder" placeholder="Jméno držitele karty" required>
-            <div class="row">
-                <input type="text" id="card-expiry" placeholder="MM/RR" required maxlength="5">
-                <input type="text" id="card-cvc" placeholder="CVC" required maxlength="3">
+            <div class="row" style="display: flex; gap: 10px;">
+                <input type="text" id="card-expiry" placeholder="MM/RR" required maxlength="5" style="width: 50%;">
+                <input type="text" id="card-cvc" placeholder="CVC" required maxlength="3" style="width: 50%;">
             </div>
-            <button class="pay-btn" onclick="processPayment()">Zaplatit a aktivovat PRO</button>
+            <button class="pay-btn" onclick="processPayment()" style="background-color: var(--danger);">Zaplatit a aktivovat PRO</button>
         </div>
     </div>
     
@@ -598,13 +607,32 @@
         }
 
         function updateModuleStatus(id, newStatus, newText, statusClass) {
-            // Modul ID je definováno v HTML pro status element
-            const statusElement = document.getElementById(id + '-status') || document.querySelector(`.module-card button[onclick*="${id}"]`).closest('.module-card').querySelector('.status-badge');
-            const textElement = document.getElementById(id + '-text') || statusElement.nextElementSibling;
+            // Logika pro nalezení statusu je složitější u nových modulů, protože nemají ID na statusu
+            let statusElement = document.getElementById(id + '-status');
+            let textElement = document.getElementById(id + '-text');
 
-            statusElement.className = 'status-badge ' + statusClass;
-            statusElement.innerText = newStatus;
-            textElement.innerText = newText;
+            if (!statusElement) {
+                // Hledání statusu a textu v rámci karty, pokud nemají unikátní ID
+                const allCards = document.querySelectorAll('.module-card');
+                for (const card of allCards) {
+                    // Jednoduchý pokus o nalezení karty podle H3 textu (stačí část)
+                    const h3Text = card.querySelector('h3').innerText;
+                    // Použijeme zjednodušenou kontrolu, protože updateModuleStatus je voláno jen s jednoduchými ID/názvy
+                    if (h3Text.includes(id.replace('_', ' ').split(' ')[0]) || (id === 'scan' && h3Text.includes('Sken Sítě')) || (id === 'iot' && h3Text.includes('IoT Hrozeb'))) {
+                        statusElement = card.querySelector('.status-badge');
+                        textElement = statusElement ? statusElement.nextElementSibling : null;
+                        break;
+                    }
+                }
+            }
+
+            if (statusElement) {
+                statusElement.className = 'status-badge ' + statusClass;
+                statusElement.innerText = newStatus;
+            }
+            if (textElement) {
+                textElement.innerText = newText;
+            }
         }
         
         function alertPROAccess() {
@@ -719,7 +747,7 @@
                 default:
                     // Nové mobilní moduly (předpokládáme úspěšnou aktivaci)
                     status = 'Aktivní';
-                    text = 'Mobilní ochrana aktivována u operátora.';
+                    text = 'Mobilní ochrana aktivována a spuštěna.';
                     statusClass = 'status-pro';
                     break;
             }
@@ -728,6 +756,7 @@
 
         // --- VPN (5 SEKUND) ---
         function handleVpnToggle(connect) {
+            // VPN je volná, proto nevyžaduje kontrolu isPROActive
             const statusElement = document.getElementById('vpn-status');
             const toggle = document.getElementById('vpn-toggle');
             
@@ -763,7 +792,6 @@
         
         // Ověří data operátora a spustí simulaci aktivace mobilní ochrany
         function validateOperatorData() {
-            const operator = document.getElementById('operator-select').value;
             const phone = document.getElementById('phone-number').value.replace(/\s/g, '');
             const puk = document.getElementById('puk-code').value;
             const pin = document.getElementById('pin-code').value;
@@ -777,17 +805,17 @@
             
             closeModal('operator-modal');
             
-            // Najdeme tlačítko, které spustilo modál, abychom ho mohli disablovat a předat dál
+            const operatorName = document.getElementById('operator-select').value;
             const buttonElement = document.querySelector(`button[onclick*="showOperatorModal('${targetId}')"]`);
+            
             if (buttonElement) {
-                startLongProcess(buttonElement, targetId, `Páruji mobilní ochranu s operátorem ${operator}...`);
+                // Použije se generický text a ID pro startLongProcess
+                startLongProcess(buttonElement, targetId, `Páruji mobilní ochranu s operátorem ${operatorName}...`);
             } else {
-                 // Fallback pro případ, že by se nepodařilo najít tlačítko
                  alert(`Simulace aktivace modulu ${targetId} zahájena!`);
             }
         }
         
-        // Ostatní aktivační funkce (processPayment, validateLicense, simulateIpLogin, activatePRO) jsou zachovány
         function processPayment() {
             const cardNumber = document.getElementById('card-number').value;
             const cardHolder = document.getElementById('card-holder').value;
@@ -828,7 +856,7 @@
                 'LICENSE_STATUS: AKTIVOVÁNO (Platnost do 2026-12-25)...',
                 'IP_BIND: Vázání licence na veřejnou IP (77.240.xxx.xxx)...',
                 'CORE_MODULES: Načítám PRO bezpečnostní komponenty...',
-                '<div class="ip-line" style="color: #FF9800;">[STATUS]: OCHRANA PRO AKTIVOVÁNA!</div>'
+                '<div class="ip-line" style="color: #00FF41;">[STATUS]: OCHRANA PRO AKTIVOVÁNA!</div>'
             ];
             
             let i = 0;
@@ -847,39 +875,65 @@
             }, 800);
         }
 
+        // TATO FUNKCE ZACHOVÁVÁ FUNKČNOST Z POSLEDNÍ VERZE KÓDU
         function activatePRO() {
             isPROActive = true;
             closeModal('ip-login-modal'); 
             document.getElementById('pro-offer-box').style.display = 'none'; 
             document.getElementById('admin-panel').style.display = 'block'; 
 
-            // Aktivace PRO tlačítek - odstranění alertPROAccess a nastavení správné akce/statusu
+            // 1. ITERUJEME PŘES VŠECHNY KARTY A AKTIVUJEME TLAČÍTKA
             document.querySelectorAll('.module-card').forEach(card => {
-                const statusBadge = card.querySelector('.status-locked');
+                const statusBadge = card.querySelector('.status-badge');
                 const actionBtn = card.querySelector('.action-button');
                 
-                if (statusBadge) {
+                if (card.classList.contains('pro-upgrade-box')) return;
+
+                if (statusBadge && statusBadge.classList.contains('status-locked')) {
                     statusBadge.classList.remove('status-locked');
                     statusBadge.classList.add('status-pro');
                     statusBadge.innerText = 'PŘIPRAVENO';
                 }
                 
-                if (actionBtn && actionBtn.innerText === 'Aktivovat PRO') {
-                    actionBtn.innerText = 'Aktivovat';
-                    // Přenastavení PRO tlačítek, pokud nevedou do modalu operátora
-                    if (!actionBtn.outerHTML.includes("showOperatorModal")) {
-                         actionBtn.onclick = () => startLongProcess(actionBtn, actionBtn.closest('.module-card').querySelector('h3 i').className.split('-').pop(), 'Spouštím PRO modul...');
+                if (actionBtn) {
+                    actionBtn.disabled = false;
+                    
+                    if (actionBtn.innerText === 'Aktivovat PRO') {
+                         if (actionBtn.getAttribute('onclick').includes('showOperatorModal')) {
+                             actionBtn.innerText = 'Ověřit a Spustit';
+                         } else {
+                             actionBtn.innerText = 'Spustit';
+                         }
+                         actionBtn.style.backgroundColor = 'var(--primary)'; // Zajištění správné barvy pro nově odemčené
+                    }
+                    
+                    // Přenastavení 'onclick' pro moduly, které dříve používaly alertPROAccess()
+                    if (actionBtn.getAttribute('onclick') === 'alertPROAccess()') {
+                        const h3Text = card.querySelector('h3').innerText;
+                        let moduleId;
+                        let loadingText = `Spouštím PRO modul: ${h3Text.split('\n')[0]}...`;
+
+                        // Mapování ID pro startLongProcess
+                        if (h3Text.includes('Hloubkový Sken')) moduleId = 'scan';
+                        else if (h3Text.includes('Blokování IoT')) moduleId = 'iot';
+                        else if (h3Text.includes('Rodičovská Kontrola')) moduleId = 'parent';
+                        else if (h3Text.includes('Ochrana Kamery/Mikrofonu')) moduleId = 'cam';
+                        else if (h3Text.includes('Biometrický')) moduleId = 'bio_lock';
+                        else if (h3Text.includes('Anti-Rootkit')) moduleId = 'rootkit_scan';
+                        else if (h3Text.includes('Vzdálené Vymazání')) moduleId = 'remote_wipe';
+                        else if (h3Text.includes('Ochrana proti Spyware')) moduleId = 'spyware_prot';
+                        else if (h3Text.includes('GPS Spoofing')) moduleId = 'gps_spoof';
+                        else if (h3Text.includes('USB-C')) moduleId = 'usb_prot';
+                        else if (h3Text.includes('Vysokého Rizika')) moduleId = 'high_risk';
+                        else if (h3Text.includes('Ochrana proti Odemčení Obličejem')) moduleId = 'face_prot';
+                        else moduleId = h3Text.split(' ')[0].replace(/[^a-zA-Z]/g, '').toLowerCase();
+                        
+                        actionBtn.onclick = () => startLongProcess(actionBtn, moduleId, loadingText);
                     }
                 }
             });
-
-            // Přesné nastavení PŮVODNÍCH PRO modulů
-            document.getElementById('scan-btn').disabled = false;
-            document.getElementById('scan-btn').onclick = () => startLongProcess(document.getElementById('scan-btn'), 'scan', 'Hloubková analýza jádra sítě...');
-            document.getElementById('iot-btn').onclick = () => startLongProcess(document.getElementById('iot-btn'), 'iot', 'Izoluji a zabezpečuji IoT zařízení...');
-            document.getElementById('parent-btn').onclick = () => startLongProcess(document.getElementById('parent-btn'), 'parent', 'Nastavuji filtry a časové limity pro síť...');
-            document.getElementById('cam-btn').onclick = () => startLongProcess(document.getElementById('cam-btn'), 'cam', 'Aktivuji sledování přístupu k periferiím...');
             
+            // 2. Jemné doladění textů pro původní moduly
             updateModuleStatus('scan', 'PŘIPRAVENO', 'Aktivujte hloubkový sken sítě PRO verze.', 'status-pro');
             updateModuleStatus('iot', 'PŘIPRAVENO', 'Izolujte chytrá zařízení před neoprávněným přístupem.', 'status-pro');
             updateModuleStatus('parent', 'PŘIPRAVENO', 'Nastavte pravidla pro dětská zařízení.', 'status-pro');
@@ -912,13 +966,6 @@
             });
             
             // C. Počáteční stav PRO modulů
-            const proModules = ['iot', 'parent', 'cam'];
-            proModules.forEach(id => {
-                document.getElementById(id + '-btn').disabled = false; 
-                document.getElementById(id + '-btn').innerText = 'Aktivovat PRO';
-            });
-            
-            // Sken je PRO funkce, proto je na začátku disablovaný
             document.getElementById('scan-btn').disabled = true; 
         });
         
