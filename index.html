@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WiFi Security </title>
     <style>
-        /* --- Obecné styly (Návrat k čistějšímu designu) --- */
+        /* --- Obecné styly --- */
         :root {
             --primary: #4CAF50; /* Zelená pro aktivní/PRO */
             --secondary: #2196F3; /* Modrá */
@@ -80,7 +80,7 @@
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-left: 5px solid var(--secondary); /* Vizuální prvek */
+            border-left: 5px solid var(--secondary);
             display: flex;
             flex-direction: column;
         }
@@ -179,7 +179,7 @@
             cursor: pointer;
         }
         
-        /* --- Tlačítko Zavření (Křížek) - ZACHOVÁNO --- */
+        /* --- Tlačítko Zavření (Křížek) --- */
         .close-btn {
             position: absolute;
             top: 10px;
@@ -209,11 +209,14 @@
             color: var(--danger);
         }
         
+        .price-container {
+            margin: 10px 0 20px 0;
+        }
+        
         .sale-price {
             font-size: 2em;
             color: var(--danger);
             font-weight: bold;
-            margin: 10px 0;
             display: block;
         }
 
@@ -221,6 +224,53 @@
             color: var(--text-muted);
             margin-right: 15px;
         }
+        
+        /* *** UPRAVENÉ STYLY PRO TLAČÍTKA *** */
+        .upgrade-button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px; /* Větší mezera */
+            margin-top: 25px;
+        }
+        
+        #buy-btn {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background: linear-gradient(145deg, var(--danger), #cc372c); /* Jemný gradient */
+            color: white;
+            border: none;
+            border-radius: 10px; /* Zaoblenější */
+            cursor: pointer;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 6px 15px rgba(244, 67, 54, 0.4); /* Silnější stín */
+            transition: all 0.2s ease-in-out;
+        }
+        
+        #buy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(244, 67, 54, 0.6);
+        }
+
+        #license-activate-btn {
+            background: none;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 90%;
+            max-width: 350px;
+            font-size: 1em;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        
+        #license-activate-btn:hover {
+            background-color: var(--secondary);
+            color: white;
+        }
+        /* *** KONEC ÚPRAV TLAČÍTEK *** */
         
         /* --- Admin Panel --- */
         #admin-panel {
@@ -285,10 +335,10 @@
             </div>
             
             <div class="upgrade-button-group">
-                <button id="buy-btn" class="upgrade-button" style="background-color: var(--danger);">
+                <button id="buy-btn">
                     Kupte PRO za 12 990 Kč
                 </button>
-                <button id="license-activate-btn" class="license-option-btn">
+                <button id="license-activate-btn">
                     Máte licenci zakoupenou? Vložte kód
                 </button>
             </div>
@@ -581,13 +631,12 @@
 
     <script>
         // --- KONSTANTY PRO TRVÁNÍ PROCESŮ ---
-        const DURATION_LONG_MIN = 300000; // 5 minut v ms
-        const DURATION_LONG_MAX = 600000; // 10 minut v ms
-        const DURATION_SHORT_MIN = 180000; // 3 minuty v ms
-        const DURATION_SHORT_MAX = 420000; // 7 minut v ms
-        const DURATION_VPN = 5000; // 5 sekund v ms
+        const DURATION_LONG_MIN = 300000;
+        const DURATION_LONG_MAX = 600000;
+        const DURATION_SHORT_MIN = 180000;
+        const DURATION_SHORT_MAX = 420000;
+        const DURATION_VPN = 5000;
 
-        // REGULÁRNÍ VÝRAZ PRO TAJNÝ KÓD: U + 6 čísel + J + 5 čísel + N
         const LICENSE_REGEX = /^U\d{6}J\d{5}N$/;
 
         let isPROActive = false;
@@ -607,17 +656,13 @@
         }
 
         function updateModuleStatus(id, newStatus, newText, statusClass) {
-            // Logika pro nalezení statusu je složitější u nových modulů, protože nemají ID na statusu
             let statusElement = document.getElementById(id + '-status');
             let textElement = document.getElementById(id + '-text');
 
             if (!statusElement) {
-                // Hledání statusu a textu v rámci karty, pokud nemají unikátní ID
                 const allCards = document.querySelectorAll('.module-card');
                 for (const card of allCards) {
-                    // Jednoduchý pokus o nalezení karty podle H3 textu (stačí část)
                     const h3Text = card.querySelector('h3').innerText;
-                    // Použijeme zjednodušenou kontrolu, protože updateModuleStatus je voláno jen s jednoduchými ID/názvy
                     if (h3Text.includes(id.replace('_', ' ').split(' ')[0]) || (id === 'scan' && h3Text.includes('Sken Sítě')) || (id === 'iot' && h3Text.includes('IoT Hrozeb'))) {
                         statusElement = card.querySelector('.status-badge');
                         textElement = statusElement ? statusElement.nextElementSibling : null;
@@ -674,20 +719,17 @@
             let duration;
             let statusClass = 'status-pro';
 
-            // Kontrola PRO licence (Pouze Optimalizace a Identity jsou Free)
             if (!isPROActive && (id !== 'optimize' && id !== 'identity')) {
                  alertPROAccess();
                  return;
             }
 
-            // Nastavení trvání
             if (id === 'scan' || id === 'parent' || id === 'identity') {
                 duration = getRandomDuration(DURATION_LONG_MIN, DURATION_LONG_MAX);
             } else if (id === 'optimize' || id === 'iot' || id === 'cam') {
                 duration = getRandomDuration(DURATION_SHORT_MIN, DURATION_SHORT_MAX);
             } else {
-                // Generické trvání pro nové PRO moduly
-                 duration = getRandomDuration(DURATION_SHORT_MIN, DURATION_SHORT_MAX);
+                duration = getRandomDuration(DURATION_SHORT_MIN, DURATION_SHORT_MAX);
             }
 
             activeProcessId = id;
@@ -712,7 +754,6 @@
             let status, text, statusClass;
             const rand = Math.random();
 
-            // Původní moduly
             switch (id) {
                 case 'scan':
                     status = rand < 0.8 ? 'BEZPEČNÉ' : 'Zranitelné';
@@ -745,7 +786,6 @@
                     statusClass = rand < 0.9 ? 'status-safe' : 'status-risk';
                     break;
                 default:
-                    // Nové mobilní moduly (předpokládáme úspěšnou aktivaci)
                     status = 'Aktivní';
                     text = 'Mobilní ochrana aktivována a spuštěna.';
                     statusClass = 'status-pro';
@@ -756,7 +796,6 @@
 
         // --- VPN (5 SEKUND) ---
         function handleVpnToggle(connect) {
-            // VPN je volná, proto nevyžaduje kontrolu isPROActive
             const statusElement = document.getElementById('vpn-status');
             const toggle = document.getElementById('vpn-toggle');
             
@@ -780,7 +819,6 @@
         
         // --- FUNKČNOST AKTIVACE ---
 
-        // Zobrazí modál pro ověření mobilní sítě (vyžaduje PRO)
         function showOperatorModal(moduleId) {
             if (!isPROActive) {
                 alertPROAccess();
@@ -790,7 +828,6 @@
             document.getElementById('operator-modal').style.display = 'flex';
         }
         
-        // Ověří data operátora a spustí simulaci aktivace mobilní ochrany
         function validateOperatorData() {
             const phone = document.getElementById('phone-number').value.replace(/\s/g, '');
             const puk = document.getElementById('puk-code').value;
@@ -809,7 +846,6 @@
             const buttonElement = document.querySelector(`button[onclick*="showOperatorModal('${targetId}')"]`);
             
             if (buttonElement) {
-                // Použije se generický text a ID pro startLongProcess
                 startLongProcess(buttonElement, targetId, `Páruji mobilní ochranu s operátorem ${operatorName}...`);
             } else {
                  alert(`Simulace aktivace modulu ${targetId} zahájena!`);
@@ -875,14 +911,12 @@
             }, 800);
         }
 
-        // TATO FUNKCE ZACHOVÁVÁ FUNKČNOST Z POSLEDNÍ VERZE KÓDU
         function activatePRO() {
             isPROActive = true;
             closeModal('ip-login-modal'); 
             document.getElementById('pro-offer-box').style.display = 'none'; 
             document.getElementById('admin-panel').style.display = 'block'; 
 
-            // 1. ITERUJEME PŘES VŠECHNY KARTY A AKTIVUJEME TLAČÍTKA
             document.querySelectorAll('.module-card').forEach(card => {
                 const statusBadge = card.querySelector('.status-badge');
                 const actionBtn = card.querySelector('.action-button');
@@ -904,16 +938,14 @@
                          } else {
                              actionBtn.innerText = 'Spustit';
                          }
-                         actionBtn.style.backgroundColor = 'var(--primary)'; // Zajištění správné barvy pro nově odemčené
+                         actionBtn.style.backgroundColor = 'var(--primary)';
                     }
                     
-                    // Přenastavení 'onclick' pro moduly, které dříve používaly alertPROAccess()
                     if (actionBtn.getAttribute('onclick') === 'alertPROAccess()') {
                         const h3Text = card.querySelector('h3').innerText;
                         let moduleId;
                         let loadingText = `Spouštím PRO modul: ${h3Text.split('\n')[0]}...`;
 
-                        // Mapování ID pro startLongProcess
                         if (h3Text.includes('Hloubkový Sken')) moduleId = 'scan';
                         else if (h3Text.includes('Blokování IoT')) moduleId = 'iot';
                         else if (h3Text.includes('Rodičovská Kontrola')) moduleId = 'parent';
@@ -933,7 +965,6 @@
                 }
             });
             
-            // 2. Jemné doladění textů pro původní moduly
             updateModuleStatus('scan', 'PŘIPRAVENO', 'Aktivujte hloubkový sken sítě PRO verze.', 'status-pro');
             updateModuleStatus('iot', 'PŘIPRAVENO', 'Izolujte chytrá zařízení před neoprávněným přístupem.', 'status-pro');
             updateModuleStatus('parent', 'PŘIPRAVENO', 'Nastavte pravidla pro dětská zařízení.', 'status-pro');
@@ -946,7 +977,6 @@
         // --- INICIALIZACE ---
 
         document.addEventListener('DOMContentLoaded', () => {
-            // A. Mrtvá tlačítka pro účet
             const disableButton = (id) => {
                 document.getElementById(id).addEventListener('click', (e) => {
                     e.preventDefault();
@@ -956,7 +986,6 @@
             disableButton('login-btn');
             disableButton('register-btn');
             
-            // B. Nastavení tlačítek nabídky
             document.getElementById('buy-btn').addEventListener('click', () => {
                 document.getElementById('payment-modal').style.display = 'flex';
             });
@@ -965,7 +994,6 @@
                 document.getElementById('license-modal').style.display = 'flex';
             });
             
-            // C. Počáteční stav PRO modulů
             document.getElementById('scan-btn').disabled = true; 
         });
         
