@@ -213,6 +213,33 @@
         .license-option-btn:hover {
             background-color: rgba(33, 150, 243, 0.1);
         }
+        
+        /* --- Modální Okna: Společné styly pro obsah (Nové) --- */
+        .modal-content-base {
+            position: relative; /* Důležité pro umístění křížku */
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+        }
+
+        /* --- Tlačítko Zavření (Křížek) (Nové) --- */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: var(--text-muted);
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 400; /* Zajištění viditelnosti */
+        }
+
+        .close-btn:hover {
+            color: var(--text-light);
+        }
 
         /* --- IP Login (Terminál) --- */
         #ip-login-modal {
@@ -220,8 +247,12 @@
             color: #00FF41; 
             font-family: 'Courier New', Courier, monospace;
         }
+        
+        #ip-login-content {
+            position: relative;
+        }
 
-        /* --- Licenční Kód Modál (Styly z předchozí verze) --- */
+        /* --- Licenční Kód Modál --- */
         #license-modal {
             background-color: rgba(0, 0, 0, 0.8);
             z-index: 300;
@@ -229,11 +260,6 @@
 
         .license-content {
             background-color: #2d2d2d;
-            padding: 30px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
             text-align: center;
         }
 
@@ -261,7 +287,7 @@
             cursor: pointer;
         }
         
-        /* --- Platební okno (OBNOVENO) --- */
+        /* --- Platební okno --- */
         #payment-modal {
             background-color: rgba(0, 0, 0, 0.9);
             z-index: 300;
@@ -269,11 +295,6 @@
 
         .payment-content {
             background-color: #2c3e50;
-            padding: 30px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 450px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
             text-align: left;
         }
 
@@ -443,6 +464,7 @@
     </main>
 
     <div id="loading-overlay" class="overlay">
+        <span class="close-btn" onclick="handleCloseRunningProcess()">×</span> 
         <div class="spinner"></div>
         <p id="loading-text" class="loading-text">Probíhá proces...</p>
         <p id="loading-duration" style="font-size: 0.8em; color: var(--text-muted);"></p>
@@ -450,15 +472,17 @@
 
     <div id="ip-login-modal" class="overlay">
         <div id="ip-login-content">
+            <span class="close-btn" onclick="closeModal('ip-login-modal')">×</span>
             <h2>🔒 Aktivace licence PRO...</h2>
             <div id="ip-log">
-                <div class="ip-line">-- Iniciace licenčního protokolu --</div>
+                <div class="ip-line">-- Inicializace licenčního protokolu --</div>
             </div>
         </div>
     </div>
 
     <div id="license-modal" class="overlay">
-        <div class="license-content">
+        <div class="license-content modal-content-base">
+            <span class="close-btn" onclick="closeModal('license-modal')">×</span>
             <h3>🔑 Vložte Váš licenční klíč</h3>
             <p style="color: var(--text-muted);">Zadejte kód pro aktivaci plné verze programu.</p>
             <input type="text" id="license-key-input" placeholder="NAPŘ. UXXXXXXJXXXXXN" required maxlength="15">
@@ -467,7 +491,8 @@
     </div>
     
     <div id="payment-modal" class="overlay">
-        <div class="payment-content">
+        <div class="payment-content modal-content-base">
+            <span class="close-btn" onclick="closeModal('payment-modal')">×</span>
             <h3>💳 Dokončení nákupu: 13 000 Kč</h3>
             <input type="text" id="card-number" placeholder="Číslo karty" required maxlength="16">
             <input type="text" id="card-holder" placeholder="Jméno držitele karty" required>
@@ -493,6 +518,8 @@
 
         let isPROActive = false;
         let activeProcessId = null;
+        let currentProcessTimeout = null; // Uložení timeoutu pro přerušení
+        let currentProcessButton = null; // Uložení tlačítka pro odblokování
 
         // --- POMOCNÉ FUNKCE ---
 
@@ -514,6 +541,42 @@
         function alertPROAccess() {
             alert("Tato pokročilá funkce vyžaduje aktivovanou PRO licenci.");
         }
+        
+        // --- ZAVÍRACÍ FUNKCE (NOVÉ) ---
+        
+        /** Zavře modální okno podle ID */
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+        
+        /** Speciální zavírání pro běžící proces s potvrzením */
+        function handleCloseRunningProcess() {
+            if (confirm("Opravdu chcete přerušit běžící operaci? Proces nebude dokončen.")) {
+                // Zrušení spuštěného timeoutu
+                if (currentProcessTimeout) {
+                    clearTimeout(currentProcessTimeout);
+                }
+                
+                // Odblokování tlačítka
+                if (currentProcessButton) {
+                    currentProcessButton.disabled = false;
+                }
+                
+                // Aktualizace stavu modulu
+                if (activeProcessId) {
+                     updateModuleStatus(activeProcessId, 'PŘERUŠENO', 'Operace byla přerušena uživatelem.', 'status-risk');
+                }
+                
+                // Zavření loading modálu
+                closeModal('loading-overlay');
+                
+                // Reset proměnných
+                activeProcessId = null;
+                currentProcessButton = null;
+                currentProcessTimeout = null;
+            }
+        }
+
 
         // --- HLAVNÍ FUNKČNOST MODULŮ ---
 
@@ -535,6 +598,7 @@
             }
 
             activeProcessId = id;
+            currentProcessButton = button; // Uložení tlačítka
             button.disabled = true;
             document.getElementById('loading-text').innerText = loadingText;
             document.getElementById('loading-duration').innerText = formatDuration(duration);
@@ -542,10 +606,12 @@
 
             updateModuleStatus(id, 'PROBÍHÁ', 'Zpracovávám data a provádím kontrolu...', statusClass);
 
-            setTimeout(() => {
+            currentProcessTimeout = setTimeout(() => { // Uložení timeoutu
                 document.getElementById('loading-overlay').style.display = 'none';
                 button.disabled = false;
                 completeProcess(id);
+                currentProcessTimeout = null; // Reset
+                currentProcessButton = null; // Reset
             }, duration);
         }
 
@@ -625,7 +691,7 @@
                 return;
             }
 
-            document.getElementById('payment-modal').style.display = 'none';
+            closeModal('payment-modal'); // Použito closeModal
             // Platba "úspěšná", spustí se IP aktivace
             simulateIpLogin(); 
         }
@@ -636,7 +702,7 @@
             const licenseKey = keyInput.value.toUpperCase().trim();
 
             if (LICENSE_REGEX.test(licenseKey)) {
-                document.getElementById('license-modal').style.display = 'none';
+                closeModal('license-modal'); // Použito closeModal
                 // Klíč platný, spustí se IP aktivace
                 simulateIpLogin(); 
             } else {
@@ -680,7 +746,7 @@
         // 4. Aktivace PRO Verze
         function activatePRO() {
             isPROActive = true;
-            document.getElementById('ip-login-modal').style.display = 'none';
+            closeModal('ip-login-modal'); // Použito closeModal
             document.getElementById('pro-offer-box').style.display = 'none'; 
             document.getElementById('admin-panel').style.display = 'block'; 
 
