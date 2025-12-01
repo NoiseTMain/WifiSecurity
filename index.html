@@ -174,6 +174,45 @@
             margin-bottom: 20px;
             text-transform: uppercase;
         }
+        
+        /* --- Tlačítka aktivace (hybridní) --- */
+        .upgrade-button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .upgrade-button {
+            padding: 12px 30px;
+            font-size: 1.1em;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 90%;
+            max-width: 300px;
+        }
+
+        .license-option-btn {
+            background: none;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 90%;
+            max-width: 300px;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+        }
+
+        .license-option-btn:hover {
+            background-color: rgba(33, 150, 243, 0.1);
+        }
 
         /* --- IP Login (Terminál) --- */
         #ip-login-modal {
@@ -182,7 +221,7 @@
             font-family: 'Courier New', Courier, monospace;
         }
 
-        /* --- Licenční Kód Modál (NOVÉ) --- */
+        /* --- Licenční Kód Modál (Styly z předchozí verze) --- */
         #license-modal {
             background-color: rgba(0, 0, 0, 0.8);
             z-index: 300;
@@ -196,11 +235,6 @@
             max-width: 400px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
             text-align: center;
-        }
-        
-        .license-content h3 {
-            color: white;
-            margin-bottom: 20px;
         }
 
         .license-content input {
@@ -225,11 +259,60 @@
             border-radius: 5px;
             color: white;
             cursor: pointer;
-            transition: background-color 0.3s;
+        }
+        
+        /* --- Platební okno (OBNOVENO) --- */
+        #payment-modal {
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 300;
         }
 
-        .activate-btn:hover {
-            background-color: #43A047;
+        .payment-content {
+            background-color: #2c3e50;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            text-align: left;
+        }
+
+        .payment-content h3 {
+            color: white;
+            border-bottom: 1px solid #4a627a;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .payment-content input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #4a627a;
+            border-radius: 5px;
+            background-color: #34495e;
+            color: white;
+        }
+
+        .payment-content .row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .payment-content .row input {
+            width: 100%;
+        }
+
+        .pay-btn {
+            background-color: var(--primary);
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            margin-top: 15px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
         }
 
         /* --- Admin Panel --- */
@@ -275,11 +358,11 @@
                     <option>ChaCha20-Poly1305</option>
                 </select>
             </div>
-            </div>
+        </div>
 
         <div id="pro-offer-box" class="module-card pro-upgrade-box">
             <h3>🔥 EXKLUZIVNÍ NABÍDKA PRO MAXIMÁLNÍ BEZPEČÍ</h3>
-            <p class="description">Získejte celoroční licenci **WiFi Security PRO** s největší slevou roku, nebo aktivujte Váš licenční klíč:</p>
+            <p class="description">Získejte celoroční licenci **WiFi Security PRO** s největší slevou roku:</p>
             
             <div class="price-container">
                 <span class="original-price">
@@ -294,9 +377,15 @@
                 ⭐ VÁNOČNÍ SLEVOVÝ TÝDEN! Ušetříte 3000 Kč
             </div>
             
-            <button id="upgrade-btn" class="upgrade-button">
-                Aktivovat PRO licenci
-            </button>
+            <div class="upgrade-button-group">
+                <button id="buy-btn" class="upgrade-button">
+                    Kupte PRO za 13 000 Kč
+                </button>
+                
+                <button id="license-activate-btn" class="license-option-btn">
+                    Máte licenci zakoupenou? Vložte kód
+                </button>
+            </div>
         </div>
 
         <div class="module-card">
@@ -363,7 +452,7 @@
         <div id="ip-login-content">
             <h2>🔒 Aktivace licence PRO...</h2>
             <div id="ip-log">
-                <div class="ip-line">-- Inicializace licenčního protokolu --</div>
+                <div class="ip-line">-- Iniciace licenčního protokolu --</div>
             </div>
         </div>
     </div>
@@ -374,6 +463,19 @@
             <p style="color: var(--text-muted);">Zadejte kód pro aktivaci plné verze programu.</p>
             <input type="text" id="license-key-input" placeholder="NAPŘ. UXXXXXXJXXXXXN" required maxlength="15">
             <button class="activate-btn" onclick="validateLicense()">Aktivovat produkt</button>
+        </div>
+    </div>
+    
+    <div id="payment-modal" class="overlay">
+        <div class="payment-content">
+            <h3>💳 Dokončení nákupu: 13 000 Kč</h3>
+            <input type="text" id="card-number" placeholder="Číslo karty" required maxlength="16">
+            <input type="text" id="card-holder" placeholder="Jméno držitele karty" required>
+            <div class="row">
+                <input type="text" id="card-expiry" placeholder="MM/RR" required maxlength="5">
+                <input type="text" id="card-cvc" placeholder="CVC" required maxlength="3">
+            </div>
+            <button class="pay-btn" onclick="processPayment()">Zaplatit a aktivovat PRO</button>
         </div>
     </div>
 
@@ -427,7 +529,6 @@
                 return;
             }
 
-            // Ošetření pro PRO moduly, pokud není aktivní
             if ((id === 'scan' || id === 'iot' || id === 'parent' || id === 'cam') && !isPROActive) {
                 alertPROAccess();
                 return;
@@ -509,22 +610,34 @@
                 }
             }, DURATION_VPN);
         }
-
-        // --- FUNKČNOST LICENČNÍHO KLÍČE A AKTIVACE ---
         
-        // 1. Otevře licenční okno
-        document.getElementById('upgrade-btn').addEventListener('click', () => {
-            document.getElementById('license-modal').style.display = 'flex';
-        });
+        // --- FUNKČNOST AKTIVACE: HYBRIDNÍ ---
 
-        // 2. Ověří licenční klíč
+        // 1. Zpracování platby (kontrola vyplnění)
+        function processPayment() {
+            const cardNumber = document.getElementById('card-number').value;
+            const cardHolder = document.getElementById('card-holder').value;
+            const cardExpiry = document.getElementById('card-expiry').value;
+            const cardCVC = document.getElementById('card-cvc').value;
+
+            if (cardNumber.length < 16 || cardHolder.length < 3 || cardExpiry.length < 5 || cardCVC.length < 3) {
+                alert("Vyplňte prosím všechny údaje o kartě pro ověření platby.");
+                return;
+            }
+
+            document.getElementById('payment-modal').style.display = 'none';
+            // Platba "úspěšná", spustí se IP aktivace
+            simulateIpLogin(); 
+        }
+
+        // 2. Ověření licenčního klíče
         function validateLicense() {
             const keyInput = document.getElementById('license-key-input');
             const licenseKey = keyInput.value.toUpperCase().trim();
 
             if (LICENSE_REGEX.test(licenseKey)) {
                 document.getElementById('license-modal').style.display = 'none';
-                // Licenční klíč je platný, pokračujeme IP aktivací
+                // Klíč platný, spustí se IP aktivace
                 simulateIpLogin(); 
             } else {
                 alert("Neplatný licenční klíč. Zkontrolujte formát (UxxxxxxJxxxxxN).");
@@ -590,7 +703,7 @@
         // --- INICIALIZACE ---
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Mrtvá tlačítka
+            // A. Mrtvá tlačítka pro účet
             const disableButton = (id) => {
                 document.getElementById(id).addEventListener('click', (e) => {
                     e.preventDefault();
@@ -600,7 +713,16 @@
             disableButton('login-btn');
             disableButton('register-btn');
             
-            // Počáteční stav PRO modulů
+            // B. Nastavení tlačítek nabídky
+            document.getElementById('buy-btn').addEventListener('click', () => {
+                document.getElementById('payment-modal').style.display = 'flex';
+            });
+
+            document.getElementById('license-activate-btn').addEventListener('click', () => {
+                document.getElementById('license-modal').style.display = 'flex';
+            });
+            
+            // C. Počáteční stav PRO modulů
             const proModules = ['iot', 'parent', 'cam'];
             proModules.forEach(id => {
                 document.getElementById(id + '-btn').disabled = false; 
